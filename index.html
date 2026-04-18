@@ -5,168 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Challenge Premium</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
-        :root {
-            --bg: #0b0e14;
-            --card: #151921;
-            --accent: #e94560;
-            --secondary: #0f3460;
-            --text: #ffffff;
-            --gold: #fbc531;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            padding: 20px;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { font-weight: 800; letter-spacing: -1px; text-align: center; margin-bottom: 30px; }
-        h3 { margin-top: 0; font-weight: 600; color: rgba(255,255,255,0.7); font-size: 1.1em; }
-
-        input, textarea {
-            width: 100%;
-            padding: 16px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border: 2px solid transparent;
-            background: var(--secondary);
-            color: white;
-            box-sizing: border-box;
-            font-size: 15px;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--accent); outline: none; }
-
-        button {
-            width: 100%;
-            padding: 16px;
-            background: var(--accent);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4); }
-
+        :root { --bg: #0d1117; --card: #161b22; --accent: #7b2ff7; --text: #c9d1d9; --gold: #f1c40f; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 480px; padding: 20px; }
+        .card { background: var(--card); border: 1px solid #30363d; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: white; font-size: 28px; margin-bottom: 30px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { filter: brightness(1.2); }
         .hidden { display: none; }
-
-        /* Таблица лидеров */
-        .leader-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            margin-bottom: 8px;
-            border-radius: 12px;
-            transition: 0.3s;
-        }
-
-        .leader-item.me {
-            border: 1px solid var(--gold);
-            background: rgba(251, 197, 49, 0.1);
-        }
-
-        .rank { font-weight: 800; width: 30px; color: var(--accent); }
-        .name { flex-grow: 1; font-weight: 500; }
-        .score { font-weight: 800; color: var(--gold); }
-
-        /* Список книг */
-        .book-item {
-            padding: 15px;
-            border-left: 4px solid var(--accent);
-            background: rgba(255,255,255,0.03);
-            margin-bottom: 10px;
-            border-radius: 0 12px 12px 0;
-        }
-
-        .book-item small { color: #888; display: block; margin-top: 5px; }
-
-        .points-pill {
-            background: var(--accent);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            float: right;
-        }
-
-        .status-header { text-align: center; font-size: 12px; opacity: 0.5; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .leader-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #30363d; }
+        .leader-item.me { background: rgba(123, 47, 247, 0.1); border-radius: 8px; border: 1px solid var(--accent); }
+        .book-card { background: #010409; padding: 12px; border-radius: 8px; margin-top: 10px; border-left: 4px solid var(--accent); }
+        .badge { background: var(--accent); padding: 2px 8px; border-radius: 12px; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="status-header">System Active • Production v2.0</div>
-    
-    <h1>READING<br><span style="color: var(--accent);">CHALLENGE</span></h1>
+    <h1>📚 Reading Challenge</h1>
 
     <div id="auth-section" class="card">
-        <h3>Личный доступ</h3>
-        <input type="text" id="username" placeholder="Имя профиля">
-        <input type="password" id="password" placeholder="Секретный код">
-        <button onclick="auth('login')">ВОЙТИ</button>
-        <button onclick="auth('register')" style="background: none; color: #888; font-size: 14px;">Создать новый аккаунт</button>
+        <h2 style="text-align: center; margin-top: 0;">Привет!</h2>
+        <input type="text" id="username" placeholder="Логин">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="handleAuth('login')">Войти</button>
+        <button onclick="handleAuth('register')" style="background: none; border: 1px solid var(--accent); margin-top: 10px;">Регистрация</button>
     </div>
 
     <div id="main-section" class="hidden">
-        <div class="card" style="display: flex; align-items: center; justify-content: space-between;">
-            <div>
-                <h2 id="user-display" style="margin:0; text-align: left;">User</h2>
-                <div style="color: var(--gold); font-weight: 800; font-size: 24px;">
-                    <span id="user-points">0</span> <small style="font-size: 14px;">PTS</small>
-                </div>
+        <div class="card" style="text-align: center;">
+            <h2 id="display-name" style="margin: 0;"></h2>
+            <div style="font-size: 24px; color: var(--gold); margin: 10px 0;">
+                <span id="display-points">0</span> <small>PTS</small>
             </div>
-            <button onclick="logout()" style="width: auto; padding: 8px 15px; background: #222;">Выйти</button>
+            <button onclick="logout()" style="width: auto; padding: 6px 16px; background: #30363d;">Выйти</button>
         </div>
 
         <div class="card">
-            <h3>📖 Новая книга</h3>
-            <input type="text" id="book-title" placeholder="Название произведения">
-            <input type="text" id="book-author" placeholder="Автор">
-            <textarea id="book-review" rows="3" placeholder="Твои мысли о прочитанном..."></textarea>
-            <button id="add-btn" onclick="addBook()">ОТПРАВИТЬ НА АНАЛИЗ ИИ</button>
+            <h3>📝 Добавить книгу</h3>
+            <input type="text" id="title" placeholder="Название книги">
+            <input type="text" id="author" placeholder="Автор">
+            <textarea id="review" rows="3" placeholder="Ваш отзыв..."></textarea>
+            <button id="add-btn" onclick="addBook()">ОТПРАВИТЬ ИИ</button>
         </div>
 
         <div class="card">
-            <h3>🏆 Глобальный рейтинг</h3>
-            <div id="leaderboard">
-                </div>
+            <h3>🏆 Лидеры</h3>
+            <div id="leaderboard"></div>
         </div>
 
         <div class="card">
-            <h3>📚 Прочитано вами</h3>
-            <div id="book-list">
-                </div>
+            <h3>📖 Моя полка</h3>
+            <div id="my-books"></div>
         </div>
     </div>
 </div>
@@ -177,10 +68,10 @@
 
     if (user) showMain();
 
-    async function auth(type) {
+    async function handleAuth(type) {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
-        if (!u || !p) return alert("Введите данные!");
+        if (!u || !p) return alert("Заполни поля!");
 
         try {
             const res = await fetch(`${API_URL}/${type}`, {
@@ -190,81 +81,74 @@
             });
             const data = await res.json();
             if (res.ok) {
-                user = {id: data.user_id, name: u, points: data.points || 0};
+                user = data;
                 localStorage.setItem('reading_user', JSON.stringify(user));
                 showMain();
             } else { alert(data.message); }
-        } catch (e) { alert("Сервер спит. Нажмите кнопку еще раз через 20 секунд."); }
+        } catch (e) {
+            alert("Сервер просыпается... Подождите 30 секунд и нажмите еще раз.");
+        }
     }
 
     function showMain() {
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('main-section').classList.remove('hidden');
-        document.getElementById('user-display').innerText = user.name;
-        document.getElementById('user-points').innerText = user.points;
-        loadData();
+        document.getElementById('display-name').innerText = user.username;
+        document.getElementById('display-points').innerText = user.points;
+        updateData();
     }
 
     async function addBook() {
         const btn = document.getElementById('add-btn');
-        const title = document.getElementById('book-title').value;
-        const author = document.getElementById('book-author').value;
-        const review = document.getElementById('book-review').value;
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const review = document.getElementById('review').value;
 
-        if (!title || !review) return alert("Заполни поля!");
+        if (!title || !review) return alert("Нужно название и отзыв!");
 
-        btn.innerText = "ИИ ОЦЕНИВАЕТ...";
         btn.disabled = true;
+        btn.innerText = "ИИ ДУМАЕТ...";
 
         try {
             const res = await fetch(`${API_URL}/add_book`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({user_id: user.id, title, author, review})
+                body: JSON.stringify({user_id: user.user_id, title, author, review})
             });
             const data = await res.json();
-            alert(`ИИ присудил вам ${data.points_earned} баллов!`);
+            alert(`Баллы за книгу: +${data.points_earned}`);
             user.points = data.new_total;
-            document.getElementById('user-points').innerText = user.points;
-            
-            // Очистка полей
-            document.getElementById('book-title').value = '';
-            document.getElementById('book-author').value = '';
-            document.getElementById('book-review').value = '';
-            
-            loadData();
+            localStorage.setItem('reading_user', JSON.stringify(user));
+            document.getElementById('display-points').innerText = user.points;
+            document.getElementById('title').value = '';
+            document.getElementById('review').value = '';
+            updateData();
         } catch (e) { alert("Ошибка сохранения"); }
-        btn.innerText = "ОТПРАВИТЬ НА АНАЛИЗ ИИ";
-        btn.disabled = false;
+        btn.disabled = false; btn.innerText = "ОТПРАВИТЬ ИИ";
     }
 
-    async function loadData() {
-        try {
-            // Загрузка лидеров
-            const lRes = await fetch(`${API_URL}/leaderboard`);
-            const leaders = await lRes.json();
-            const lContainer = document.getElementById('leaderboard');
-            
-            lContainer.innerHTML = leaders.map((l, index) => {
-                const isMe = l.username === user.name;
-                return `
-                    <div class="leader-item ${isMe ? 'me' : ''}">
-                        <div class="rank">#${index + 1}</div>
-                        <div class="name">${isMe ? '🌍 ' : ''}${l.username}</div>
-                        <div class="score">${l.points}</div>
-                    </div>
-                `;
-            }).join('');
+    async function updateData() {
+        // Лидеры
+        const lRes = await fetch(`${API_URL}/leaderboard`);
+        const leaders = await lRes.json();
+        document.getElementById('leaderboard').innerHTML = leaders.map((l, i) => `
+            <div class="leader-item ${l.username === user.username ? 'me' : ''}">
+                <span>${i+1}. ${l.username === user.username ? '🌍 ' : ''}${l.username}</span>
+                <span style="color:var(--gold)">${l.points}</span>
+            </div>
+        `).join('');
 
-            // Здесь можно добавить fetch для списка книг, если добавишь такой роут в app.py
-            // Пока имитируем загрузку добавленной книги
-        } catch(e) {}
+        // Книги
+        const bRes = await fetch(`${API_URL}/my_books/${user.user_id}`);
+        const books = await bRes.json();
+        document.getElementById('my-books').innerHTML = books.map(b => `
+            <div class="book-card">
+                <b>${b.title}</b> — ${b.author} <span class="badge">+${b.points}</span>
+            </div>
+        `).join('');
     }
 
-    function logout() {
-        localStorage.removeItem('reading_user');
-        location.reload();
-    }
+    function logout() { localStorage.removeItem('reading_user'); location.reload(); }
 </script>
 
 </body>
