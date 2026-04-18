@@ -5,16 +5,15 @@ from flask_cors import CORS
 import google.generativeai as genai
 
 app = Flask(__name__)
-CORS(app) # Разрешаем запросы с GitHub Pages
+# ВАЖНО: Разрешаем запросы именно с твоего домена GitHub
+CORS(app)
 
-# Подключение к базе данных (берется из настроек Render)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL, sslmode='require')
 
-# Создание таблиц при запуске
 def init_db():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -48,9 +47,9 @@ def register():
                     (data['username'], data['password']))
         user_id = cur.fetchone()[0]
         conn.commit()
-        return jsonify({"message": "Успех", "user_id": user_id}), 201
+        return jsonify({"user_id": user_id, "username": data['username'], "points": 0}), 201
     except:
-        return jsonify({"message": "Пользователь уже существует"}), 400
+        return jsonify({"message": "Имя уже занято"}), 400
     finally:
         cur.close()
         conn.close()
@@ -60,36 +59,46 @@ def login():
     data = request.json
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT id, username FROM users WHERE username = %s AND password = %s',
+    cur.execute('SELECT id, username, points FROM users WHERE username = %s AND password = %s',
                 (data['username'], data['password']))
     user = cur.fetchone()
     cur.close()
     conn.close()
     if user:
-        return jsonify({"user_id": user[0], "username": user[1]})
-    return jsonify({"message": "Ошибка входа"}), 401
+        return jsonify({"user_id": user[0], "username": user[1], "points": user[2]})
+    return jsonify({"message": "Неверные данные"}), 401
 
 @app.route('/api/add_book', methods=['POST'])
 def add_book():
     data = request.json
-    # Искусственный интеллект оценивает отзыв
     model = genai.GenerativeModel("gemini-1.5-flash")
-    prompt = f"Оцени качество отзыва о книге. Дай только число от 10 до 50 баллов. Отзыв: {data['review']}"
-    response = model.generate_content(prompt)
+    prompt = f"Оцени отзыв о книге от 10 до 50 баллов. Дай только цифру. Отзыв: {data['review']}"
     try:
+        response = model.generate_content(prompt)
         points = int(''.join(filter(str.isdigit, response.text)))
     except:
-        points = 20
+        points = 15
 
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute('INSERT INTO books (user_id, title, author, review, points) VALUES (%s, %s, %s, %s, %s)',
                 (data['user_id'], data['title'], data['author'], data['review'], points))
-    cur.execute('UPDATE users SET points = points + %s WHERE id = %s', (points, data['user_id']))
+    cur.execute('UPDATE users SET points = points + %s WHERE id = %s RETURNING points', (points, data['user_id']))
+    new_points = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()
-    return jsonify({"points_earned": points})
+    return jsonify({"points_earned": points, "new_total": new_points})
+
+@app.route('/api/my_books/<int:user_id>', methods=['GET'])
+def get_my_books(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT title, author, points FROM books WHERE user_id = %s ORDER BY id DESC', (user_id,))
+    books = cur.fetchall()
+    cur.close()
+    conn.close()
+    return jsonify([{"title": b[0], "author": b[1], "points": b[2]} for b in books])
 
 @app.route('/api/leaderboard', methods=['GET'])
 def leaderboard():
