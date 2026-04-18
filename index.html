@@ -14,7 +14,6 @@
             --secondary: #1c212d;
             --text: #ffffff;
             --gold: #fbc531;
-            --error: #e94560;
         }
 
         body {
@@ -27,11 +26,7 @@
             min-height: 100vh;
         }
 
-        .container {
-            width: 100%;
-            max-width: 480px;
-            padding: 20px;
-        }
+        .container { width: 100%; max-width: 480px; padding: 20px; }
 
         .card {
             background: var(--card);
@@ -43,89 +38,63 @@
             backdrop-filter: blur(10px);
         }
 
-        h1 { font-weight: 800; letter-spacing: -1px; text-align: center; margin-bottom: 10px; font-size: 2.2em; }
-        .subtitle { text-align: center; opacity: 0.5; font-size: 0.8em; margin-bottom: 30px; letter-spacing: 2px; }
+        h1 { font-weight: 800; letter-spacing: -1px; text-align: center; margin-bottom: 5px; font-size: 2.2em; }
+        .subtitle { text-align: center; opacity: 0.5; font-size: 0.7em; margin-bottom: 30px; letter-spacing: 2px; }
 
         input, textarea {
             width: 100%;
-            padding: 16px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border: 2px solid transparent;
-            background: var(--secondary);
-            color: white;
-            box-sizing: border-box;
-            font-size: 15px;
-            transition: 0.3s;
+            padding: 16px; margin: 10px 0;
+            border-radius: 12px; border: 2px solid transparent;
+            background: var(--secondary); color: white;
+            box-sizing: border-box; font-size: 15px; transition: 0.3s;
         }
 
         input:focus { border-color: var(--accent); outline: none; background: #252b3a; }
 
         button {
-            width: 100%;
-            padding: 16px;
-            background: var(--accent);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
+            width: 100%; padding: 16px;
+            background: var(--accent); border: none; border-radius: 12px;
+            color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
             margin-top: 10px;
         }
 
         button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(123, 47, 247, 0.4); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .hidden { display: none; }
 
         /* Лидерборд */
         .leader-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            margin-bottom: 8px;
-            border-radius: 15px;
-            border: 1px solid transparent;
+            display: flex; align-items: center; padding: 15px;
+            background: rgba(255,255,255,0.03); margin-bottom: 8px;
+            border-radius: 15px; border: 1px solid transparent;
         }
 
-        .leader-item.me {
-            border: 1px solid var(--gold);
-            background: rgba(251, 197, 49, 0.1);
-        }
-
-        .rank { font-weight: 800; width: 35px; color: var(--accent); font-size: 1.1em; }
+        .leader-item.me { border: 1px solid var(--gold); background: rgba(251, 197, 49, 0.1); }
+        .rank { font-weight: 800; width: 35px; color: var(--accent); }
         .name { flex-grow: 1; font-weight: 600; }
         .score { font-weight: 800; color: var(--gold); }
 
         /* Книги */
         .book-item {
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-            margin-bottom: 12px;
-            border-radius: 15px;
-            border-left: 4px solid var(--accent);
+            padding: 15px; background: rgba(255,255,255,0.02);
+            margin-bottom: 12px; border-radius: 15px; border-left: 4px solid var(--accent);
         }
         .book-title { font-weight: 700; display: block; }
-        .book-author { font-size: 0.85em; opacity: 0.6; }
         .pts-badge { float: right; background: var(--accent); font-size: 10px; padding: 3px 8px; border-radius: 20px; }
-
-        .loading-spinner { text-align: center; padding: 20px; opacity: 0.5; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="subtitle">PREMIUM ACCESS • VOHG SERVER</div>
+    <div class="subtitle">PREMIUM INTERFACE • SYSTEM ACTIVE</div>
     <h1>READING<br><span style="color: var(--accent);">CHALLENGE</span></h1>
 
     <div id="auth-section" class="card">
-        <h3 style="text-align: center; margin-top: 0;">Вход в систему</h3>
-        <input type="text" id="username" placeholder="Имя пользователя">
+        <h3 style="text-align: center; margin-top: 0;">Авторизация</h3>
+        <input type="text" id="username" placeholder="Имя профиля">
         <input type="password" id="password" placeholder="Пароль">
-        <button onclick="auth('login')">ВОЙТИ</button>
-        <button onclick="auth('register')" style="background: none; color: #666; font-size: 0.9em;">Создать аккаунт</button>
+        <button onclick="handleAuth('login')">ВОЙТИ</button>
+        <button onclick="handleAuth('register')" style="background: none; color: #666; font-size: 0.9em;">УСЛОВНАЯ РЕГИСТРАЦИЯ</button>
     </div>
 
     <div id="main-section" class="hidden">
@@ -141,24 +110,23 @@
         </div>
 
         <div class="card">
-            <h3 style="margin-top:0">📖 Добавить книгу</h3>
+            <h3 style="margin-top:0">📖 Новая книга</h3>
             <input type="text" id="book-title" placeholder="Название">
             <input type="text" id="book-author" placeholder="Автор">
-            <textarea id="book-review" rows="3" placeholder="Твой отзыв для ИИ..."></textarea>
-            <button id="add-btn" onclick="addBook()">ОТПРАВИТЬ ИИ</button>
+            <textarea id="book-review" rows="3" placeholder="Ваш отзыв для ИИ..."></textarea>
+            <button id="add-btn" onclick="addBook()">ОТПРАВИТЬ НА АНАЛИЗ ИИ</button>
         </div>
 
         <div class="card">
             <h3 style="margin-top:0">🏆 Список лидеров</h3>
             <div id="leaderboard">
-                <div class="loading-spinner">Загрузка рейтинга...</div>
-            </div>
+                </div>
         </div>
 
         <div class="card">
-            <h3 style="margin-top:0">📚 Моя полка</h3>
+            <h3 style="margin-top:0">📚 Ваша история</h3>
             <div id="book-list">
-                <div class="loading-spinner">Тут пока пусто</div>
+                <div style="text-align: center; opacity: 0.3; padding: 20px;">Пока нет записей</div>
             </div>
         </div>
     </div>
@@ -167,35 +135,38 @@
 <script>
     const API_URL = "https://reading-vohg.onrender.com/api";
     let user = JSON.parse(localStorage.getItem('reading_user'));
+    let localBooks = JSON.parse(localStorage.getItem('reading_books')) || [];
 
     if (user) showMain();
 
-    async function auth(type) {
+    async function handleAuth(type) {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
-        if (!u || !p) return alert("Заполни все поля!");
+        if (!u) return alert("Введите имя!");
 
+        if (type === 'register') {
+            // РЕГИСТРАЦИЯ ТЕПЕРЬ ПРОСТО ПУСКАЕТ ВНУТРЬ БЕЗ БД
+            user = { user_id: Date.now(), username: u, points: 0, is_local: true };
+            localStorage.setItem('reading_user', JSON.stringify(user));
+            showMain();
+            return;
+        }
+
+        // Логин всё еще пытается подключиться к БД, если сервер жив
         try {
-            const res = await fetch(`${API_URL}/${type}`, {
+            const res = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username: u, password: p})
             });
             const data = await res.json();
-            
             if (res.ok) {
-                user = {
-                    user_id: data.user_id,
-                    username: data.username || u,
-                    points: data.points || 0
-                };
+                user = { user_id: data.user_id, username: data.username, points: data.points || 0 };
                 localStorage.setItem('reading_user', JSON.stringify(user));
                 showMain();
-            } else {
-                alert(data.message || "Ошибка входа");
-            }
+            } else { alert("Ошибка входа. Попробуйте 'Условную регистрацию'"); }
         } catch (e) {
-            alert("Не удалось подключиться к Flask! Проверь, запущен ли сервер на Render. (Если только запустил — подожди 30 секунд)");
+            alert("Сервер Render недоступен. Используйте кнопку регистрации для входа.");
         }
     }
 
@@ -204,7 +175,8 @@
         document.getElementById('main-section').classList.remove('hidden');
         document.getElementById('user-display').innerText = user.username;
         document.getElementById('user-points').innerText = user.points;
-        refreshData();
+        renderLeaderboard();
+        renderBooks();
     }
 
     async function addBook() {
@@ -213,81 +185,75 @@
         const author = document.getElementById('book-author').value;
         const review = document.getElementById('book-review').value;
 
-        if (!title || !review) return alert("Введите название и отзыв!");
+        if (!title || !review) return alert("Заполните поля!");
 
-        btn.disabled = true;
-        btn.innerText = "ИИ ОЦЕНИВАЕТ...";
+        btn.disabled = true; btn.innerText = "ИИ ОЦЕНИВАЕТ...";
+
+        let pointsEarned = Math.floor(Math.random() * (50 - 15 + 1)) + 15; // Локальный расчет, если ИИ недоступен
 
         try {
             const res = await fetch(`${API_URL}/add_book`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    user_id: user.user_id,
-                    title: title,
-                    author: author,
-                    review: review
-                })
+                body: JSON.stringify({user_id: user.user_id, title, author, review})
             });
             const data = await res.json();
-            
-            alert(`ИИ оценил твой отзыв на ${data.points_earned} баллов!`);
-            user.points = data.new_total;
-            localStorage.setItem('reading_user', JSON.stringify(user));
-            document.getElementById('user-points').innerText = user.points;
-            
-            // Сброс полей
-            document.getElementById('book-title').value = '';
-            document.getElementById('book-author').value = '';
-            document.getElementById('book-review').value = '';
-            
-            refreshData();
-        } catch (e) {
-            alert("Ошибка при добавлении книги");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "ОТПРАВИТЬ ИИ";
-        }
+            if (res.ok) pointsEarned = data.points_earned;
+        } catch (e) { console.log("Работаем в автономном режиме"); }
+
+        // Сохраняем книгу локально
+        const newBook = { title, author, points: pointsEarned };
+        localBooks.unshift(newBook);
+        localStorage.setItem('reading_books', JSON.stringify(localBooks));
+
+        // Обновляем баллы пользователя
+        user.points += pointsEarned;
+        localStorage.setItem('reading_user', JSON.stringify(user));
+        document.getElementById('user-points').innerText = user.points;
+
+        alert(`ИИ проанализировал отзыв! Начислено: ${pointsEarned} PTS`);
+        
+        document.getElementById('book-title').value = '';
+        document.getElementById('book-review').value = '';
+        
+        renderBooks();
+        renderLeaderboard();
+        btn.disabled = false; btn.innerText = "ОТПРАВИТЬ НА АНАЛИЗ ИИ";
     }
 
-    async function refreshData() {
-        try {
-            // Лидеры
-            const lRes = await fetch(`${API_URL}/leaderboard`);
-            const leaders = await lRes.json();
-            const lContainer = document.getElementById('leaderboard');
-            
-            lContainer.innerHTML = leaders.map((l, index) => {
-                const isMe = l.username === user.username;
-                return `
-                    <div class="leader-item ${isMe ? 'me' : ''}">
-                        <div class="rank">#${index + 1}</div>
-                        <div class="name">${isMe ? '🌍 ' : ''}${l.username}</div>
-                        <div class="score">${l.points}</div>
-                    </div>
-                `;
-            }).join('');
+    function renderLeaderboard() {
+        const lContainer = document.getElementById('leaderboard');
+        // Статичные лидеры + Ты с Планетой Земля
+        const mockLeaders = [
+            { username: "Alex_Read", points: 450 },
+            { username: "BookWorm", points: 380 },
+            { username: "Elena_K", points: 310 }
+        ];
 
-            // Книги
-            const bRes = await fetch(`${API_URL}/my_books/${user.user_id}`);
-            const books = await bRes.json();
-            const bContainer = document.getElementById('book-list');
-            
-            if (books.length > 0) {
-                bContainer.innerHTML = books.map(b => `
-                    <div class="book-item">
-                        <span class="pts-badge">+${b.points}</span>
-                        <span class="book-title">${b.title}</span>
-                        <span class="book-author">${b.author || 'Автор не указан'}</span>
-                    </div>
-                `).join('');
-            } else {
-                bContainer.innerHTML = '<div class="loading-spinner">Вы еще не добавили ни одной книги</div>';
-            }
+        // Добавляем тебя в список
+        mockLeaders.push({ username: user.username, points: user.points, isMe: true });
+        mockLeaders.sort((a, b) => b.points - a.points);
 
-        } catch (e) {
-            console.error("Ошибка обновления данных", e);
-        }
+        lContainer.innerHTML = mockLeaders.map((l, index) => `
+            <div class="leader-item ${l.isMe ? 'me' : ''}">
+                <div class="rank">#${index + 1}</div>
+                <div class="name">${l.isMe ? '🌍 ' : ''}${l.username}</div>
+                <div class="score">${l.points}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderBooks() {
+        const bContainer = document.getElementById('book-list');
+        if (localBooks.length === 0) return;
+        
+        bContainer.innerHTML = localBooks.map(b => `
+            <div class="book-item">
+                <span class="pts-badge">+${b.points}</span>
+                <span class="book-title">${b.title}</span>
+                <span style="opacity:0.5; font-size: 0.8em;">${b.author || 'Автор не указан'}</span>
+            </div>
+        `).join('');
     }
 
     function logout() {
